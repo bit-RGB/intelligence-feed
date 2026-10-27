@@ -73,7 +73,10 @@ def test_settings_dialog_can_persistently_hide_keyword_tags(source):
     assert "showTags && jsx('span'" in source
     assert "jsx(Switch, { 'aria-label': '显示关键词标签', checked: showTags" in source
     assert "style: { color: muted, whiteSpace: 'nowrap', marginLeft: 'auto' }" in source
-    assert "jsx(FeedResults, { ctx, profile, domain, readFilter, searchText, showTags, updateMutation }" in source
+    assert "jsx(FeedResults, { ctx, profile, domain, readFilter, searchText, showTags, updateMutation, previewZoom, onPreviewZoomChange: changePreviewZoom }" in source
+    assert "ctx.storage.get('settings.previewZoom', DEFAULT_PREVIEW_ZOOM)" in source
+    assert "ctx.storage.set('settings.previewZoom', next)" in source
+    assert "jsx(PreviewZoomControls, { zoom: previewZoom, onZoomChange: changePreviewZoom })" in source
 
 
 @contract
@@ -116,13 +119,19 @@ def test_scoped_routes_and_mutations(source):
     assert 'setPreviewUrl(event.url)' in source
     assert "jsx('webview'" in source
     assert "getAttribute('src')" in source and "setAttribute('src', url)" in source
-    assert "jsx(WebView, { url: previewUrl })" in source
+    assert "jsx(WebView, { url: displayUrl, zoom, onZoomChange })" in source
     assert "position: 'relative', flex: 1, minWidth: 0, minHeight: 0, overflow: 'hidden'" in source
     assert "position: 'absolute', inset: 0, width: '100%', height: '100%'" in source
     assert 'Ctrl+滚轮缩放' in source
-    assert "el.addEventListener('dom-ready', installZoom)" in source
+    assert "el.addEventListener('dom-ready', onReady)" in source
     assert "window.addEventListener('wheel'" in source
-    assert "Math.max(0.4" in source and "Math.min(2" in source
+    assert "Math.max(0.4" in source and "Math.min(1.5" in source
+    assert "el.setZoomFactor(zoomRef.current)" in source
+    assert "sessionStorage" not in source
+    assert "document.documentElement.style.zoom" not in source
+    assert "overflow-x: auto !important" in source
+    assert "prefers-reduced-motion: reduce" in source
+    assert "grid-template-columns 180ms ease-out" in source
     assert "event.ctrlKey && event.key === '0'" in source
     assert '关闭预览' in source
     # 外部打开入口集中在预览面板头部，卡片上不再有。

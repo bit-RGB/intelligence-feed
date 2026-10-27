@@ -17,6 +17,21 @@ const DOMAIN_ICONS = {
   weibo: 'flame',
   favorites: 'star-empty'
 }
+const DEFAULT_PREVIEW_ZOOM = 0.8
+const PREVIEW_MOTION_MS = 180
+
+function normalizePreviewZoom(value) {
+  if (value == null || value === '' || !Number.isFinite(Number(value))) return DEFAULT_PREVIEW_ZOOM
+  return Math.min(1.5, Math.max(0.4, Math.round(Number(value) * 10) / 10))
+}
+
+function PreviewZoomControls({ zoom, onZoomChange }) {
+  return jsxs('div', { role: 'group', 'aria-label': '网页预览缩放', style: { display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0 }, children: [
+    jsx(Button, { variant: 'ghost', size: 'icon-xs', 'aria-label': '缩小网页', disabled: zoom <= 0.4, onClick: () => onZoomChange(zoom - 0.1), children: jsx(Codicon, { name: 'remove' }) }),
+    jsx(Button, { variant: 'ghost', size: 'sm', 'aria-label': '恢复默认缩放 80%', title: '恢复默认 80%（Ctrl+0）', onClick: () => onZoomChange(DEFAULT_PREVIEW_ZOOM), style: { minWidth: 44, fontVariantNumeric: 'tabular-nums' }, children: `${Math.round(zoom * 100)}%` }),
+    jsx(Button, { variant: 'ghost', size: 'icon-xs', 'aria-label': '放大网页', disabled: zoom >= 1.5, onClick: () => onZoomChange(zoom + 0.1), children: jsx(Codicon, { name: 'add' }) })
+  ] })
+}
 const SOURCE_GROUPS = [
   ['semiconductor', '半导体'],
   ['ai', 'AI'],
@@ -100,6 +115,12 @@ function FeedPage({ ctx }) {
   const [searchText, setSearchText] = useState('')
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [showTags, setShowTags] = useState(() => ctx.storage.get('settings.showTags', true) !== false)
+  const [previewZoom, setPreviewZoom] = useState(() => normalizePreviewZoom(ctx.storage.get('settings.previewZoom', DEFAULT_PREVIEW_ZOOM)))
+  function changePreviewZoom(value) {
+    const next = normalizePreviewZoom(value)
+    setPreviewZoom(next)
+    ctx.storage.set('settings.previewZoom', next)
+  }
   useEffect(() => {
     const timer = setTimeout(() => setSearchText(draftSearch), 250)
     return () => clearTimeout(timer)
@@ -193,6 +214,13 @@ function FeedPage({ ctx }) {
                 jsx('span', { style: { color: muted, fontSize: 12 }, children: '关闭后隐藏资讯标题下方的关键词标签。' })
               ] })
             ] }),
+            jsxs('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }, children: [
+              jsxs('div', { children: [
+                jsx('div', { children: '网页预览缩放比例' }),
+                jsx('div', { style: { color: muted, fontSize: 12 }, children: '默认 80%，范围 40%～150%；调整后自动记忆，所有文章共用。' })
+              ] }),
+              jsx(PreviewZoomControls, { zoom: previewZoom, onZoomChange: changePreviewZoom })
+            ] }),
             jsxs('div', { style: { display: 'flex', flexDirection: 'column', gap: 8, paddingTop: 12, borderTop: '1px solid var(--ui-stroke-secondary)' }, children: [
               jsx('div', { style: { fontWeight: 600 }, children: '信息源' }),
               jsx('div', { style: { color: muted, fontSize: 12 }, children: '关闭后停止采集并从普通列表隐藏，历史收藏仍会保留。' }),
@@ -226,14 +254,14 @@ function FeedPage({ ctx }) {
             ] }),
             jsx(DialogFooter, { children: jsx(Button, { onClick: () => setSettingsOpen(false), style: softButtonStyle, children: '完成' }) })
           ] }) }),
-          jsx(FeedResults, { ctx, profile, domain, readFilter, searchText, showTags, updateMutation }, filterKey)
+          jsx(FeedResults, { ctx, profile, domain, readFilter, searchText, showTags, updateMutation, previewZoom, onPreviewZoomChange: changePreviewZoom }, filterKey)
         ]
       })
     ]
   })
 }
 
-function FeedResults({ ctx, profile, domain, readFilter, searchText, showTags, updateMutation }) {
+function FeedResults({ ctx, profile, domain, readFilter, searchText, showTags, updateMutation, previewZoom, onPreviewZoomChange }) {
   const queryClient = useQueryClient()
   const [cursor, setCursor] = useState(null)
   const [pages, setPages] = useState([])
@@ -329,10 +357,12 @@ function FeedResults({ ctx, profile, domain, readFilter, searchText, showTags, u
     : domain === 'favorites' ? '收藏夹为空'
     : readFilter === 'unread' ? '暂无未读消息' : readFilter === 'read' ? '暂无已读消息' : '近 30 天暂无消息'
   return jsxs('div', {
-    style: { display: 'flex', flex: 1, minHeight: 0, gap: 12 },
+    className: 'intelligence-feed-results',
+    style: { display: 'grid', gridTemplateColumns: previewUrl ? 'minmax(0, 2fr) minmax(0, 3fr)' : 'minmax(0, 5fr) minmax(0, 0fr)', flex: 1, minHeight: 0, minWidth: 0, gap: previewUrl ? 12 : 0, transition: 'grid-template-columns 180ms ease-out, gap 180ms ease-out' },
     children: [
+      jsx('style', { children: '@media (prefers-reduced-motion: reduce) { .intelligence-feed-results, .intelligence-feed-preview { transition: none !important; } }' }),
       jsxs('div', {
-        style: { display: 'flex', flexDirection: 'column', flex: previewUrl ? 2 : 1, minWidth: 0, minHeight: 0, gap: 12 },
+        style: { display: 'flex', flexDirection: 'column', minWidth: 0, minHeight: 0, gap: 12 },
         children: [
       jsxs('div', { style: { display: 'flex', alignItems: 'center', gap: 12 }, children: [
         jsx('span', { style: { color: muted }, children: `更新时间：${latest.data?.run?.finished_at ?? latest.data?.run?.started_at ?? '尚未更新'}` }),
@@ -395,69 +425,129 @@ function FeedResults({ ctx, profile, domain, readFilter, searchText, showTags, u
           !events.isError && cursor && jsx(Button, { disabled: events.isFetching || loadingMore, onClick: loadMore, style: softButtonStyle, children: '加载更多' })
         ]
       }),
-      previewUrl && jsxs('div', {
-        style: { display: 'flex', flexDirection: 'column', flex: 3, minWidth: 0, minHeight: 0, border: '1px solid var(--ui-stroke-secondary)', borderRadius: 8, overflow: 'hidden' },
-        children: [
-          jsxs('div', { style: { display: 'flex', alignItems: 'center', gap: 8, padding: '4px 8px', borderBottom: '1px solid var(--ui-stroke-secondary)' }, children: [
-            jsx('span', { style: { flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: muted, fontSize: 12 }, children: (() => { try { return new URL(previewUrl).hostname } catch { return previewUrl } })() }),
-            jsx('span', { style: { color: muted, fontSize: 12, whiteSpace: 'nowrap' }, children: 'Ctrl+滚轮缩放' }),
-            jsx(Button, { variant: 'ghost', size: 'icon-xs', 'aria-label': '在外部浏览器打开', onClick: () => ctx.os.openExternal(previewUrl), children: jsx(Codicon, { name: 'link-external' }) }),
-            jsx(Button, { variant: 'ghost', size: 'icon-xs', 'aria-label': '关闭预览', onClick: () => setPreviewUrl(null), children: jsx(Codicon, { name: 'close' }) })
-          ] }),
-          jsx('div', {
-            style: { position: 'relative', flex: 1, minWidth: 0, minHeight: 0, overflow: 'hidden' },
-            children: jsx(WebView, { url: previewUrl })
-          })
-        ]
+      jsx(PreviewPane, {
+        url: previewUrl, zoom: previewZoom, onZoomChange: onPreviewZoomChange,
+        onClose: () => setPreviewUrl(null), ctx
       })
+    ]
+  })
+}
+
+function PreviewPane({ url, zoom, onZoomChange, onClose, ctx }) {
+  const [displayUrl, setDisplayUrl] = useState(url)
+  const [expanded, setExpanded] = useState(false)
+  useEffect(() => {
+    if (url) {
+      setDisplayUrl(url)
+      setExpanded(true)
+      return
+    }
+    setExpanded(false)
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setDisplayUrl(null)
+      return
+    }
+    const timer = setTimeout(() => setDisplayUrl(null), PREVIEW_MOTION_MS)
+    return () => clearTimeout(timer)
+  }, [url])
+  return jsx('div', {
+    className: 'intelligence-feed-preview',
+    'aria-hidden': !url, inert: !url,
+    style: { display: 'flex', flexDirection: 'column', minWidth: 0, minHeight: 0, border: displayUrl ? '1px solid var(--ui-stroke-secondary)' : undefined, borderRadius: 4, overflow: 'hidden', opacity: expanded ? 1 : 0, transform: expanded ? 'translateX(0)' : 'translateX(12px)', transition: 'opacity 180ms ease-out, transform 180ms ease-out' },
+    children: displayUrl && [
+      jsxs('div', { style: { display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0, padding: '4px 8px', borderBottom: '1px solid var(--ui-stroke-secondary)' }, children: [
+        jsx('span', { style: { flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: muted, fontSize: 12 }, children: (() => { try { return new URL(displayUrl).hostname } catch { return displayUrl } })() }),
+        jsx(PreviewZoomControls, { zoom, onZoomChange }),
+        jsx('span', { title: 'Ctrl+滚轮缩放；Ctrl+0 恢复默认', style: { color: muted, fontSize: 11 }, children: 'Ctrl+滚轮缩放' }),
+        jsx(Button, { variant: 'ghost', size: 'icon-xs', 'aria-label': '在外部浏览器打开', onClick: () => ctx.os.openExternal(displayUrl), children: jsx(Codicon, { name: 'link-external' }) }),
+        jsx(Button, { variant: 'ghost', size: 'icon-xs', 'aria-label': '关闭预览', onClick: onClose, children: jsx(Codicon, { name: 'close' }) })
+      ] }, 'toolbar'),
+      jsx('div', {
+        style: { position: 'relative', flex: 1, minWidth: 0, minHeight: 0, overflow: 'hidden' },
+        children: jsx(WebView, { url: displayUrl, zoom, onZoomChange })
+      }, 'content')
     ]
   })
 }
 
 // Electron webview：独立浏览器进程渲染原文，不受 iframe 的 X-Frame-Options 限制。
 // src 用 setAttribute 维护——React 不会把 src 变更可靠地映射到 webview 导航。
-function WebView({ url }) {
+function WebView({ url, zoom, onZoomChange }) {
   const ref = useRef(null)
+  const zoomRef = useRef(normalizePreviewZoom(zoom))
+  const onZoomChangeRef = useRef(onZoomChange)
+  zoomRef.current = normalizePreviewZoom(zoom)
+  onZoomChangeRef.current = onZoomChange
   useEffect(() => {
     const el = ref.current
     if (el && el.getAttribute('src') !== url) el.setAttribute('src', url)
   }, [url])
   useEffect(() => {
+    // dom-ready also applies the value when this effect runs before guest readiness.
+    try { ref.current?.setZoomFactor(zoomRef.current) } catch {}
+  }, [zoom])
+  useEffect(() => {
     const el = ref.current
     if (!el) return
-    const installZoom = () => {
-      // webview 内的滚轮事件不会冒泡到插件页面，所以在访客页面中安装监听器。
-      // 使用 CSS zoom 可同时缩小固定宽度网站，让原本横向被截断的内容进入视口。
-      void el.executeJavaScript(`(() => {
-        if (window.__intelligenceFeedZoomInstalled) return;
-        window.__intelligenceFeedZoomInstalled = true;
-        const key = '__intelligenceFeedZoom';
-        let zoom = Number(sessionStorage.getItem(key) || '1');
-        const clamp = value => Math.min(2, Math.max(0.4, Math.round(value * 10) / 10));
-        const apply = () => {
-          zoom = clamp(zoom);
-          document.documentElement.style.zoom = String(zoom);
-          sessionStorage.setItem(key, String(zoom));
-        };
-        apply();
-        window.addEventListener('wheel', event => {
+    let channel = ''
+    let disposed = false
+    const receiveShortcut = event => {
+      if (disposed || !channel || typeof event.message !== 'string' || !event.message.startsWith(channel)) return
+      const action = event.message.slice(channel.length)
+      if (!['in', 'out', 'reset'].includes(action)) return
+      const next = normalizePreviewZoom(action === 'reset' ? DEFAULT_PREVIEW_ZOOM : zoomRef.current + (action === 'in' ? 0.1 : -0.1))
+      zoomRef.current = next
+      try { el.setZoomFactor(next) } catch {}
+      onZoomChangeRef.current(next)
+    }
+    const installZoom = async () => {
+      if (disposed) return
+      channel = `intelligence-feed-zoom-${Math.random().toString(36).slice(2)}:`
+      el.setZoomFactor(zoomRef.current)
+      // Guest shortcuts cross a narrowly-scoped console channel. No Node/preload/IPC permissions.
+      // Only three whitelisted actions are accepted; guest data is never evaluated by the host.
+      await el.executeJavaScript(`(() => {
+        const channel = ${JSON.stringify(channel)};
+        const emit = action => console.debug(channel + action);
+        const previous = window.__intelligenceFeedZoom;
+        if (previous) {
+          window.removeEventListener('wheel', previous.wheel, true);
+          window.removeEventListener('keydown', previous.keydown, true);
+        }
+        const style = document.getElementById('intelligence-feed-preview-scroll') || document.createElement('style');
+        style.id = 'intelligence-feed-preview-scroll';
+        style.textContent = 'html { overflow-x: auto !important; } body { overflow-x: visible !important; }';
+        document.head.appendChild(style);
+        const wheel = event => {
           if (!event.ctrlKey) return;
           event.preventDefault();
           event.stopPropagation();
-          zoom = clamp(zoom + (event.deltaY < 0 ? 0.1 : -0.1));
-          apply();
-        }, { capture: true, passive: false });
-        window.addEventListener('keydown', event => {
+          if (event.deltaY) emit(event.deltaY < 0 ? 'in' : 'out');
+        };
+        const keydown = event => {
           if (event.ctrlKey && event.key === '0') {
             event.preventDefault();
-            zoom = 1;
-            apply();
+            event.stopPropagation();
+            emit('reset');
           }
-        }, { capture: true });
+        };
+        window.addEventListener('wheel', wheel, { capture: true, passive: false });
+        window.addEventListener('keydown', keydown, { capture: true });
+        window.__intelligenceFeedZoom = { wheel, keydown };
       })()`).catch(() => {})
     }
-    el.addEventListener('dom-ready', installZoom)
-    return () => el.removeEventListener('dom-ready', installZoom)
+    const onReady = () => { void installZoom().catch(() => {}) }
+    const onNavigation = event => { if (event.isMainFrame) channel = '' }
+    el.addEventListener('console-message', receiveShortcut)
+    el.addEventListener('dom-ready', onReady)
+    el.addEventListener('did-start-navigation', onNavigation)
+    return () => {
+      disposed = true
+      channel = ''
+      el.removeEventListener('console-message', receiveShortcut)
+      el.removeEventListener('dom-ready', onReady)
+      el.removeEventListener('did-start-navigation', onNavigation)
+    }
   }, [])
   return jsx('webview', {
     ref,

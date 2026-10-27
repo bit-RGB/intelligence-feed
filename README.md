@@ -1,5 +1,7 @@
 # 📰 Intelligence Feed · 资讯聚合
 
+🏷️ **当前版本：v0.1.0** · 📜 **许可证：MIT**
+
 Hermes Desktop 的多频道资讯插件：在一个页面阅读半导体、AI、汽车、音乐资讯和微博热搜。
 
 > 📌 非 Hermes 官方插件。当前主要在 Windows + Hermes Desktop 环境验证；单独安装 Hermes CLI 不会提供桌面页面。
