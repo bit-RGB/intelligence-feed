@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+     xmlns:content="http://purl.org/rss/1.0/modules/content/"
+     xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>Semi Engineering Fixture</title>
+    <link>https://example.com/</link>
+    <description>Fixture channel</description>
+    <item>
+      <title>Chiplet update</title>
+      <link>https://example.com/a</link>
+      <guid>https://example.com/a</guid>
+      <description><![CDATA[<p>HBM <b>capacity</b>   grows</p>]]></description>
+      <pubDate>Thu, 11 Sep 2025 08:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Guid only item</title>
+      <guid>https://example.com/b</guid>
+      <description>Plain text summary</description>
+      <dc:date>2025-09-10T09:30:00+00:00</dc:date>
+    </item>
+    <item>
+      <title>Long summary item</title>
+      <link>https://example.com/long</link>
+      <description><![CDATA[<p>Advanced packaging becomes critical as AI demand explodes across the semiconductor industry with chiplets HBM and CoWoS capacity all constrained through next year as foundries race to expand leading edge output for hyperscale customers worldwide while equipment makers struggle to keep up with orders</p>]]></description>
+      <pubDate>Wed, 10 Sep 2025 10:00:00 +0200</pubDate>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,200 @@
+[
+  {
+    "id": "ijiwei",
+    "domain": "semiconductor",
+    "name": "爱集微",
+    "adapter": "html-list",
+    "url": "https://www.ijiwei.com/",
+    "include_url_regex": "^https://www\\.ijiwei\\.com/n/\\d+$",
+    "max_items": 50,
+    "enabled": true
+  },
+  {
+    "id": "xcc-semiconductor",
+    "domain": "semiconductor",
+    "name": "芯查查",
+    "adapter": "html-list",
+    "url": "https://www.xcc.com/news/",
+    "include_url_regex": "^https://www\\.xcc\\.com/news/detail/\\d+$",
+    "max_items": 50,
+    "enabled": true
+  },
+  {
+    "id": "ithome-chip",
+    "domain": "semiconductor",
+    "name": "IT之家·芯片",
+    "adapter": "html-list",
+    "url": "https://www.ithome.com/tag/xinpian",
+    "include_url_regex": "^https://www\\.ithome\\.com/\\d/\\d{3}/\\d{3}\\.htm$",
+    "max_items": 50,
+    "enabled": true
+  },
+  {
+    "id": "elecfans-industry",
+    "domain": "semiconductor",
+    "name": "电子发烧友·业界新闻",
+    "adapter": "html-list",
+    "url": "https://www.elecfans.com/article/90/",
+    "include_url_regex": "^https://www\\.elecfans\\.com/d/\\d+\\.html$",
+    "max_items": 50,
+    "enabled": true
+  },
+  {
+    "id": "trendforce",
+    "domain": "semiconductor",
+    "name": "TrendForce",
+    "adapter": "html-list",
+    "url": "https://www.trendforce.com/presscenter",
+    "include_url_regex": "^https://www\\.trendforce\\.com/presscenter/news/\\d{8}-\\d+\\.html$",
+    "max_items": 30,
+    "enabled": true
+  },
+  {
+    "id": "qbitai",
+    "domain": "ai",
+    "name": "量子位",
+    "adapter": "html-list",
+    "url": "https://www.qbitai.com/",
+    "include_url_regex": "^https://www\\.qbitai\\.com/\\d{4}/\\d{2}/\\d+\\.html$",
+    "max_items": 40,
+    "enabled": true
+  },
+  {
+    "id": "ithome-ai",
+    "domain": "ai",
+    "name": "IT之家·AI",
+    "adapter": "html-list",
+    "url": "https://www.ithome.com/tag/AI",
+    "include_url_regex": "^https://www\\.ithome\\.com/\\d/\\d{3}/\\d{3}\\.htm$",
+    "max_items": 50,
+    "enabled": true
+  },
+  {
+    "id": "openai-news",
+    "domain": "ai",
+    "name": "OpenAI News",
+    "adapter": "feed",
+    "url": "https://openai.com/news/rss.xml",
+    "max_items": 30,
+    "enabled": true
+  },
+  {
+    "id": "anthropic-news",
+    "domain": "ai",
+    "name": "Anthropic News",
+    "adapter": "html-list",
+    "url": "https://www.anthropic.com/news",
+    "include_url_regex": "^https://www\\.anthropic\\.com/(?:news/[a-z0-9-]+|claude-[a-z0-9-]+|features/[a-z0-9-]+)$",
+    "max_items": 30,
+    "enabled": true
+  },
+  {
+    "id": "mistral-news",
+    "domain": "ai",
+    "name": "Mistral News",
+    "adapter": "html-list",
+    "url": "https://mistral.ai/news/",
+    "include_url_regex": "^https://mistral\\.ai/news/[a-z0-9-]+/?$",
+    "max_items": 30,
+    "enabled": true
+  },
+  {
+    "id": "nvidia-ai",
+    "domain": "ai",
+    "name": "NVIDIA AI Blog",
+    "adapter": "feed",
+    "url": "https://blogs.nvidia.com/blog/category/deep-learning/feed/",
+    "max_items": 30,
+    "enabled": true
+  },
+  {
+    "id": "github-ai",
+    "domain": "ai",
+    "name": "GitHub AI & ML",
+    "adapter": "feed",
+    "url": "https://github.blog/ai-and-ml/feed/",
+    "max_items": 30,
+    "enabled": true
+  },
+  {
+    "id": "techcrunch-ai",
+    "domain": "ai",
+    "name": "TechCrunch AI",
+    "adapter": "feed",
+    "url": "https://techcrunch.com/category/artificial-intelligence/feed/",
+    "max_items": 30,
+    "enabled": true
+  },
+  {
+    "id": "nature-ml",
+    "domain": "ai",
+    "name": "Nature·Machine Learning",
+    "adapter": "feed",
+    "url": "https://www.nature.com/subjects/machine-learning.rss",
+    "max_items": 20,
+    "enabled": true
+  },
+  {
+    "id": "d1ev",
+    "domain": "automotive",
+    "name": "第一电动",
+    "adapter": "html-list",
+    "url": "https://www.d1ev.com/",
+    "include_url_regex": "^https://www\\.d1ev\\.com/news/\\w+/\\d+$",
+    "max_items": 40,
+    "enabled": true
+  },
+  {
+    "id": "ithome-car",
+    "domain": "automotive",
+    "name": "IT之家·汽车",
+    "adapter": "html-list",
+    "url": "https://www.ithome.com/tag/qiche",
+    "include_url_regex": "^https://www\\.ithome\\.com/\\d/\\d{3}/\\d{3}\\.htm$",
+    "max_items": 50,
+    "enabled": true
+  },
+  {
+    "id": "ifeng-music",
+    "domain": "music",
+    "name": "凤凰网音乐",
+    "adapter": "html-list",
+    "url": "https://ent.ifeng.com/music/",
+    "include_url_regex": "^https://ent\\.ifeng\\.com/c/[A-Za-z0-9]+$",
+    "max_items": 20,
+    "enabled": true
+  },
+  {
+    "id": "sina-music",
+    "domain": "music",
+    "name": "新浪音乐",
+    "adapter": "html-list",
+    "url": "https://ent.sina.com.cn/music/",
+    "include_url_regex": "^https://ent\\.sina\\.com\\.cn/(?:y/[^/]+|s/m)/\\d{4}-\\d{2}-\\d{2}/doc-[^/]+\\.shtml$",
+    "max_items": 30,
+    "enabled": true
+  },
+  {
+    "id": "china-music",
+    "domain": "music",
+    "name": "中华网音乐",
+    "adapter": "html-list",
+    "url": "https://ent.china.com/zh_cn/music/",
+    "include_url_regex": "^https://ent\\.china\\.com/music/top/\\d+/\\d{8}/\\d+\\.html$",
+    "max_items": 30,
+    "enabled": true
+  },
+  {
+    "id": "weibo-hot",
+    "domain": "weibo",
+    "name": "微博热搜",
+    "adapter": "weibo-hot",
+    "url": "https://weibo.com/ajax/side/hotSearch",
+    "headers": {
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+      "Referer": "https://weibo.com/"
+    },
+    "max_items": 50,
+    "enabled": true
+  }
+]

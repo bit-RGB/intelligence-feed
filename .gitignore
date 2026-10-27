@@ -1,0 +1,38 @@
+# Python / test artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+*.egg-info/
+build/
+dist/
+
+# Local data, credentials, logs, and model weights
+.env
+.env.*
+!.env.example
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+*.sqlite3-*
+*.log
+data/
+models/
+*.bin
+*.safetensors
+
+# Local agent scratch files / implementation reports
+.superpowers/
+docs/superpowers/
+task-*-report.md
+task-*-red.txt
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

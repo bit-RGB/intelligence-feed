@@ -1,0 +1,20 @@
+{
+  "tracks": {
+    "track": [
+      {
+        "name": "Song A",
+        "url": "https://www.last.fm/music/Artist+A/_/Song+A",
+        "artist": {"#text": "Artist A", "mbid": ""},
+        "listeners": "1000",
+        "playcount": "5000"
+      },
+      {
+        "name": "Song B",
+        "url": "https://www.last.fm/music/Artist+B/_/Song+B",
+        "artist": {"#text": "Artist B", "mbid": ""},
+        "listeners": "800",
+        "playcount": "3200"
+      }
+    ]
+  }
+}

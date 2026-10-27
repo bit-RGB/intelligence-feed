@@ -1,0 +1,4 @@
+# The collection core uses Python's standard library.
+# These dependencies serve the Hermes Desktop backend API.
+fastapi>=0.115,<1
+pydantic>=2,<3
