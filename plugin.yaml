@@ -1,7 +1,7 @@
 # plugin.yaml
 name: intelligence-feed
 version: "0.1.0"
-description: Hermes Desktop 多频道资讯聚合：半导体、AI、汽车、音乐与微博热搜
+description: BriefNest · 讯集 — Hermes Desktop 多频道资讯聚合：半导体、AI、汽车、音乐与微博热搜
 license: MIT
 python_dependencies:
   - "fastapi>=0.115,<1"

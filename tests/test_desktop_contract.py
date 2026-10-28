@@ -16,7 +16,7 @@ def contract(check):
 def test_registration(source):
     for token in ("const ID = 'intelligence-feed'", "id: ID", "defaultEnabled: false",
                   "area: ROUTES_AREA", "area: SIDEBAR_NAV_AREA",
-                  "path: '/intelligence-feed'", "label: '资讯'", "codicon: 'rss'"):
+                  "path: '/intelligence-feed'", "name: '讯集'", "label: '讯集'", "codicon: 'rss'"):
         assert token in source
 
 
@@ -67,8 +67,8 @@ def test_settings_dialog_can_persistently_hide_keyword_tags(source):
     assert "const [settingsOpen, setSettingsOpen] = useState(false)" in source
     assert "ctx.storage.get('settings.showTags', true)" in source
     assert "ctx.storage.set('settings.showTags', next)" in source
-    assert "aria-label': '资讯设置'" in source
-    assert "children: '资讯设置'" in source
+    assert "aria-label': '讯集设置'" in source
+    assert "children: '讯集设置'" in source
     assert "children: '显示关键词标签'" in source
     assert "showTags && jsx('span'" in source
     assert "jsx(Switch, { 'aria-label': '显示关键词标签', checked: showTags" in source

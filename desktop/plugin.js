@@ -96,12 +96,12 @@ function relativeTime(iso) {
 
 export default {
   id: ID,
-  name: '资讯',
+  name: '讯集',
   defaultEnabled: false,
   register(ctx) {
     ctx.registerMany([
       { id: 'page', area: ROUTES_AREA, data: { path: '/intelligence-feed' }, render: () => jsx(FeedPage, { ctx }) },
-      { id: 'nav', area: SIDEBAR_NAV_AREA, order: 70, data: { path: '/intelligence-feed', label: '资讯', codicon: 'rss' } }
+      { id: 'nav', area: SIDEBAR_NAV_AREA, order: 70, data: { path: '/intelligence-feed', label: '讯集', codicon: 'rss' } }
     ])
   }
 }
@@ -193,14 +193,14 @@ function FeedPage({ ctx }) {
                 style: readFilter === value ? selectedControlStyle : undefined,
                 children: label
               }, value)) }),
-            jsxs(Button, { variant: 'ghost', size: 'sm', 'aria-label': '资讯设置', onClick: () => setSettingsOpen(true), children: [
+            jsxs(Button, { variant: 'ghost', size: 'sm', 'aria-label': '讯集设置', onClick: () => setSettingsOpen(true), children: [
               jsx(Codicon, { name: 'gear' }),
               '设置'
             ] })
           ] }),
           jsx(Dialog, { open: settingsOpen, onOpenChange: setSettingsOpen, children: jsxs(DialogContent, { children: [
             jsxs(DialogHeader, { children: [
-              jsx(DialogTitle, { children: '资讯设置' }),
+              jsx(DialogTitle, { children: '讯集设置' }),
               jsx(DialogDescription, { children: '控制资讯卡片中显示的辅助信息。' })
             ] }),
             jsxs('label', { style: { display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }, children: [

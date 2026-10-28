@@ -1,8 +1,8 @@
-# 📰 Intelligence Feed · 资讯聚合
+# 📰 BriefNest · 讯集
 
 🏷️ **当前版本：v0.1.0** · 📜 **许可证：MIT**
 
-Hermes Desktop 的多频道资讯插件：在一个页面阅读半导体、AI、汽车、音乐资讯和微博热搜。
+在 Hermes 中，一站浏览你关心的资讯。BriefNest · 讯集是 Hermes Desktop 的多频道资讯插件，支持半导体、AI、汽车、音乐资讯和微博热搜。
 
 > 📌 非 Hermes 官方插件。当前主要在 Windows + Hermes Desktop 环境验证；单独安装 Hermes CLI 不会提供桌面页面。
 
@@ -30,14 +30,16 @@ Hermes Desktop 的多频道资讯插件：在一个页面阅读半导体、AI、
 1. 使用 Hermes 的插件管理命令安装本 GitHub 仓库并启用：
 
    ```bash
-   hermes plugins install bit-RGB/intelligence-feed --enable --yes-deps
+   hermes plugins install bit-RGB/briefnest --enable --yes-deps
    ```
 
 2. 完全退出并重新打开 Hermes Desktop，让后端加载新 API。
-3. 在桌面端插件管理页面启用 **资讯**。前端默认关闭，和 Python 插件启用状态是两个开关。
-4. 打开侧边栏「资讯」，点击更新按钮采集首批资讯。
+3. 在桌面端插件管理页面启用 **讯集**。前端默认关闭，和 Python 插件启用状态是两个开关。
+4. 打开侧边栏「讯集」，点击更新按钮采集首批资讯。
 
 如安装后没有页面，可在命令面板运行 **Reload desktop plugins**。API 提示 404 时，检查当前 profile 是否已启用 `intelligence-feed`，并重启 Desktop 后端。
+
+> 🔗 项目原名 Intelligence Feed，GitHub 仓库已更名为 `briefnest`。为兼容现有安装，内部插件 ID、路由、Python 包名和数据目录仍使用 `intelligence-feed` / `intelligence_feed`；改名不迁移或清空收藏与阅读记录。
 
 安装机制参考：[Hermes 插件文档](https://hermes-agent.nousresearch.com/docs/developer-guide/plugins) · [Desktop Plugin SDK](https://hermes-agent.nousresearch.com/docs/developer-guide/desktop-plugin-sdk)。
 
